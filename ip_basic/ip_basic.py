@@ -80,7 +80,7 @@ class IP_Basic(nn.Module):
         padding: int = kernel_size // 2
 
         window_range: int = kernel_size * kernel_size
-        kernel: torch.Tensor = torch.eye(window_range, window_range).view(window_range, 1, kernel_size, kernel_size)
+        kernel: torch.Tensor = torch.eye(window_range, window_range, dtype=x.dtype, device=x.device).view(window_range, 1, kernel_size, kernel_size)
         b, c, h, w = x.shape
 
         features: torch.Tensor = F.conv2d(x.reshape(b * c, 1, h, w), kernel, padding=padding, stride=1).view(b, c, -1, h, w)
