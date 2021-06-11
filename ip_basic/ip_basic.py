@@ -93,21 +93,17 @@ class IP_Basic(nn.Module):
             depth_map: torch.Tensor = torch.where(in_depth > self.min_depth, self.max_depth - in_depth, in_depth)
         else:
             depth_map: torch.Tensor = in_depth
-        print(depth_map.shape)
 
         # Dilate
         depth_map = self.dilation(depth_map, self.custom_kernel_size)
-        print(depth_map.shape)
 
         # Hole closing
         depth_map = self.closing(depth_map, 5)
-        print(depth_map.shape)
 
         # Fill empty spaces with dilated values
         empty_pixels = (depth_map < self.min_depth)
         dilated = self.dilation(depth_map, 7)
         depth_map[empty_pixels] = dilated[empty_pixels]
-        print(depth_map.shape)
 
         # Extend highest pixel to top of image
         if self.extrapolate is True:
@@ -115,7 +111,6 @@ class IP_Basic(nn.Module):
 
         # Median blur
         depth_map = self.median_blur(depth_map, 5)
-        print(depth_map.shape)
 
         # Bilateral or Gaussian blur
         if self.blur_mode == BLUR_TYPE.BILATERAL_FILTER:
